@@ -1,0 +1,2 @@
+export const TOKEN =
+  "eyJhbGciOiJIUzUxMiJ9.eyJpZCI6MTA0MCwiZXhwIjoxNjk3OTAxNzQ0fQ.vnncTdW-OeRdMd42wXUIjjndE5x4n81RYs7W1xQCcQFAqBnYWQdoibS2XlPLWnNSHfdNR3VZu7jqnhG9ZwjOjA";

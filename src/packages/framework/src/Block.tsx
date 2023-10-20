@@ -8,8 +8,10 @@ export class Block implements IBlock {
   blockId: string;
 
   constructor() {
-    const uuidv4 = require("uuid/v4");
-    this.blockId = uuidv4();
+    const uuidv4 = new Date().getTime().toString();
+    const random = Math.floor(Math.random() * 1000);
+
+    this.blockId = uuidv4 + random;
     this.send = (message) => runEngine.sendMessage(this.blockId, message);
   }
   receive(from: string, message: Message): void {}

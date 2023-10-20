@@ -5,8 +5,9 @@ import { Message } from "../../framework/src/Message";
 import MessageEnum, { getName } from "../../framework/src/Messages/MessageEnum";
 import { runEngine } from "../../framework/src/RunEngine";
 import avatarImg from "../../../assets/avatar.png";
-
+import CreateRestApiMessage from "../../components/src/CreateRestApiMessage.web";
 import * as configJSON from "./config";
+import { TOKEN } from "../../../lib/helper";
 
 export interface Props {
   classes?: any;
@@ -44,15 +45,12 @@ interface S {
   repliedMessage: IMessage | null;
   deleteMessage: IMessage | null;
   deleteMessageModal: boolean;
-  currentPage: number;
-  perPage: number;
-  totalPage: number;
-  scrollIntoLast: boolean;
 }
 
 interface SS {}
 
 export default class ChatController extends BlockComponent<Props, S, SS> {
+  getCountryListApiCallId: string = "";
   constructor(props: Props) {
     super(props);
     this.receive = this.receive.bind(this);
@@ -68,43 +66,48 @@ export default class ChatController extends BlockComponent<Props, S, SS> {
       repliedMessage: null,
       deleteMessage: null,
       deleteMessageModal: false,
-      currentPage: 0,
-      perPage: 20,
-      totalPage: 20,
-      scrollIntoLast: true,
     };
     runEngine.attachBuildingBlock(this as IBlock, this.subScribedMessages);
   }
+  async receive(from: string, message: Message) {
+    if (message.id === getName(MessageEnum.RestAPIResponceMessage)) {
+      const apiRequestCallId = message.getData(
+        getName(MessageEnum.RestAPIResponceDataMessage)
+      );
 
-  async receive(from: String, message: Message) {}
+      const responseJson = message.getData(
+        getName(MessageEnum.RestAPIResponceSuccessMessage)
+      );
+      if (apiRequestCallId === this.getCountryListApiCallId) {
+        console.log("REs", responseJson);
+      }
+    }
 
-  async componentDidMount() {
-    this.loadMoreMessage();
-    console.log("Config", configJSON.getMessagesApiCallId);
+    // Customizable Area Start
+    // Customizable Area End
   }
 
-  loadMoreMessage = () => {
-    const { currentPage, totalPage } = this.state;
-    if (currentPage < totalPage) {
-      const newPage = currentPage + 1;
+  async componentDidMount() {
+    // this.loadMoreMessage();
+    this.getCountryList();
+  }
 
-      const hugeMessageList: IMessage[] = [
-        ...new Array(this.state.perPage),
-      ].map((item, index) => ({
-        id: index,
-        conversationId: 2,
-        date: new Date().toString(),
-        text: "Message -->" + (index + 1) + " -- Page : -> " + newPage,
-        documents: [],
-        repliedMessage: null,
-      }));
+  getHeader = () => {
+    const header = {
+      token: TOKEN,
+    };
+    return header;
+  };
+  getCountryList = () => {
+    const requestMessage = CreateRestApiMessage({
+      header: this.getHeader(),
+      apiUrl: "bx_block_profile/profiles/country_list",
+      method: "GET",
+      body: null,
+    });
 
-      this.setState((prev) => ({
-        messageList: [...hugeMessageList, ...prev.messageList],
-        currentPage: newPage,
-        scrollIntoLast: newPage === 1,
-      }));
-    }
+    this.getCountryListApiCallId = requestMessage.messageId;
+    runEngine.sendMessage(requestMessage.id, requestMessage);
   };
 
   handleDrawerToogle = () => {
@@ -115,6 +118,7 @@ export default class ChatController extends BlockComponent<Props, S, SS> {
 
   handleSelectConversation = (conversation: IConversation) => {
     this.setState({ selectedConversation: conversation, mobileOpen: false });
+    this.getCountryList();
   };
   handleSendMessage = (message: string, documents: any[]) => {
     const { selectedConversation } = this.state;
@@ -131,20 +135,10 @@ export default class ChatController extends BlockComponent<Props, S, SS> {
       repliedMessage: this.state.repliedMessage,
     };
 
-    this.setState(
-      (prev) => ({
-        messageList: [...prev.messageList, newMesssage],
-        repliedMessage: null,
-        currentPage: 1,
-        scrollIntoLast: true,
-      }),
-      () => {
-        localStorage.setItem(
-          "messages",
-          JSON.stringify(this.state.messageList)
-        );
-      }
-    );
+    this.setState((prev) => ({
+      messageList: [...prev.messageList, newMesssage],
+      repliedMessage: null,
+    }));
   };
 
   handleSetRepliedMessage = (msg: IMessage | null) => {
@@ -164,33 +158,20 @@ export default class ChatController extends BlockComponent<Props, S, SS> {
   };
 
   handleDeleteMessage = () => {
-    this.setState(
-      (prev) => ({
-        messageList: prev.messageList.map((msgItem) => {
-          if (msgItem.id === prev?.deleteMessage?.id) {
-            return {
-              ...msgItem,
-              deleted: true,
-              text: "",
-              documents: [],
-            };
-          }
-          return msgItem;
-        }),
-        deleteMessage: null,
-        deleteMessageModal: false,
-      }),
-      () => {
-        localStorage.setItem(
-          "messages",
-          JSON.stringify(this.state.messageList)
-        );
-      }
-    );
-  };
-  goNewerPage = () => {
     this.setState((prev) => ({
-      currentPage: prev.currentPage > 1 ? prev.currentPage - 1 : 1,
+      messageList: prev.messageList.map((msgItem) => {
+        if (msgItem.id === prev?.deleteMessage?.id) {
+          return {
+            ...msgItem,
+            deleted: true,
+            text: "",
+            documents: [],
+          };
+        }
+        return msgItem;
+      }),
+      deleteMessage: null,
+      deleteMessageModal: false,
     }));
   };
 }

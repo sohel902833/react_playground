@@ -5,6 +5,10 @@ enum MessageEnum {
   RestAPIResponceSuccessMessage,
   RestAPIResponceErrorMessage,
   NavigationPropsMessage,
+  RestAPIResponceEndPointMessage,
+  RestAPIRequestHeaderMessage,
+  RestAPIRequestBodyMessage,
+  RestAPIRequestMethodMessage,
 }
 
 export const getName = (myEnum: MessageEnum) => {

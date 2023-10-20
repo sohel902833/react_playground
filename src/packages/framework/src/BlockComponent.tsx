@@ -18,7 +18,9 @@ export class BlockComponent<Props, S, SS>
   constructor(props: Props) {
     super(props);
     const uuidv4 = new Date().getTime().toString();
-    this.blockId = uuidv4;
+    const random = Math.floor(Math.random() * 1000);
+
+    this.blockId = uuidv4 + random;
     this.send = (message) => runEngine.sendMessage(this.blockId, message);
     this.subScribedMessages = [""];
   }

@@ -5,8 +5,7 @@ import { IBlock } from "../../../framework/src/IBlock";
 import { runEngine } from "../../../framework/src/RunEngine";
 import { Message } from "../../../framework/src/Message";
 import { Block } from "../../../framework/src/Block";
-
-let config = require("../config");
+import { baseURL } from "../config";
 
 export default class RestApiClientBlock<Entity> extends Block {
   private props: any;
@@ -51,9 +50,8 @@ export default class RestApiClientBlock<Entity> extends Block {
     body: string
   ) {
     let fullURL =
-      endpoint.indexOf("://") === -1
-        ? config.baseURL + "/" + endpoint
-        : endpoint;
+      endpoint.indexOf("://") === -1 ? baseURL + "/" + endpoint : endpoint;
+    console.log("HERE", fullURL);
     let apiResponseMessage = new Message(
       getName(MessageEnum.RestAPIResponceMessage)
     );

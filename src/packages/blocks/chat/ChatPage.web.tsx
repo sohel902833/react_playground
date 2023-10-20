@@ -133,12 +133,6 @@ class ChatPage extends ChatController {
               handleChangeDeleteMessageModal={
                 this.handleChangeDeleteMessageModal
               }
-              current_page={this.state.currentPage}
-              totalPage={this.state.totalPage}
-              per_page={this.state.perPage}
-              onLoadMore={this.loadMoreMessage}
-              scrollIntoLast={this.state.scrollIntoLast}
-              goNewerPage={this.goNewerPage}
             />
           </main>
           <div className={classes.chat_input}>

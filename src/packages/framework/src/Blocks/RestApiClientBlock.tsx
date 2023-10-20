@@ -51,7 +51,6 @@ export default class RestApiClientBlock<Entity> extends Block {
   ) {
     let fullURL =
       endpoint.indexOf("://") === -1 ? baseURL + "/" + endpoint : endpoint;
-    console.log("HERE", fullURL);
     let apiResponseMessage = new Message(
       getName(MessageEnum.RestAPIResponceMessage)
     );

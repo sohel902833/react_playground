@@ -1,0 +1,29 @@
+.signin-phone .react-tel-input .flag-dropdown {
+  background-color: inherit;
+  border: none;
+  border-radius: 0px;
+}
+.signin-phone .react-tel-input .flag-dropdown .selected-flag:hover {
+  background-color: inherit;
+}
+
+/* Firefox */
+.custom_scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #e46e2a;
+}
+
+/* Chrome, Edge, and Safari */
+.custom_scrollbar::-webkit-scrollbar {
+  width: 7px;
+}
+
+.custom_scrollbar::-webkit-scrollbar-track {
+  background: #f2f2f2;
+  border-radius: 7px;
+}
+
+.custom_scrollbar::-webkit-scrollbar-thumb {
+  background-color: #e46e2a;
+  border-radius: 14px;
+}

@@ -1,0 +1,2 @@
+Client ID=439221864641-nge2dtam8odra7f85blntomsjuq79nn0.apps.googleusercontent.com
+Client Secret=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
